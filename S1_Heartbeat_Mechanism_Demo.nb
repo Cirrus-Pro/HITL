@@ -1,0 +1,558 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[     24743,        557]
+NotebookOptionsPosition[     24238,        536]
+NotebookOutlinePosition[     24629,        552]
+CellTagsIndexPosition[     24586,        549]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+      "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+      "===", "==="}], "="}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Core", " ", "Algorithm", " ", "Demonstration", " ", 
+    RowBox[{"(", "V8"}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+      "===", "===", "===", "===", "===", "===", "===", "===", "===", "===", "===",
+      "===", "==="}], "="}], "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"1.", " ", "CLEANUP"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Quiet", "[", 
+     RowBox[{"RemoveScheduledTask", "[", "MaybeExistingTask", "]"}], "]"}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"ClearAll", "[", "\"\<PaperA1Demo`*\>\"", "]"}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{
+    RowBox[{"BeginPackage", "[", "\"\<PaperA1Demo`\>\"", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"LaunchArtifact", "::", "usage"}], 
+     "=", "\"\<Launches the error-free verification UI.\>\""}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"2.", " ", "GLOBAL", " ", "STATE"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"$DemoState", "=", 
+     RowBox[{"<|", 
+      RowBox[{
+       RowBox[{"\"\<ModelType\>\"", "->", "\"\<RandomForest\>\""}], ",", 
+       RowBox[{"\"\<IsProcessing\>\"", "->", "False"}], ",", 
+       RowBox[{"\"\<Progress\>\"", "->", "0"}], ",", 
+       RowBox[{"\"\<Log\>\"", "->", 
+        RowBox[{"{", "}"}]}], ",", 
+       RowBox[{"\"\<Status\>\"", "->", "\"\<Ready\>\""}], ",", 
+       RowBox[{"\"\<TaskObject\>\"", "->", "None"}], ",", 
+       RowBox[{"\"\<Snapshot\>\"", "->", "None"}]}], "|>"}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{
+    RowBox[{"Q1Font", "=", "\"\<Times New Roman\>\""}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"3.", " ", "THE", " ", "HEARTBEAT", " ", "ENGINE", " ", 
+     RowBox[{"(", 
+      RowBox[{"Renamed", " ", "to", " ", "avoid", " ", "conflict"}], ")"}]}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"RunSimulationTick", "[", "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", "}"}], ",", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"A", ".", "Update"}], " ", "Progress", " ", 
+            RowBox[{"(", 
+             RowBox[{"Smooth", " ", "Animation"}], ")"}]}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<Progress\>\"", "]"}], "+=", "1"}],
+            ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+             RowBox[{"B", ".", "Check"}], " ", "Completion"}], "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"$DemoState", "[", "\"\<Progress\>\"", "]"}], ">=", 
+              "100"}], ",", 
+             RowBox[{
+              RowBox[{"FinishSimulation", "[", "\"\<Success\>\"", "]"}], 
+              ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"4.", " ", "CONTROLLER", " ", "FUNCTIONS", " ", 
+     RowBox[{"(", "Renamed", ")"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StartSimulation", "[", "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", "}"}], ",", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}]}], ",", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], "=", 
+            "True"}], ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<Progress\>\"", "]"}], "=", "0"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<Status\>\"", "]"}], 
+            "=", "\"\<Training...\>\""}], ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{"SNAPSHOT", ":", 
+             RowBox[{
+             "Capture", " ", "the", " ", "state", " ", "at", " ", "start"}]}],
+             "*)"}], "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<Snapshot\>\"", "]"}], "=", 
+            RowBox[{"$DemoState", "[", "\"\<ModelType\>\"", "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{"HEARTBEAT", ":", 
+             RowBox[{"Runs", " ", "every", " ", "0.1", "s", " ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Smooth", "&"}], " ", "Non"}], "-", "blocking"}], 
+               ")"}]}]}], "*)"}], "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<TaskObject\>\"", "]"}], "=", 
+            RowBox[{"RunScheduledTask", "[", 
+             RowBox[{
+              RowBox[{"RunSimulationTick", "[", "]"}], ",", "0.1"}], "]"}]}], 
+           ";"}]}], "]"}], ";"}]}], "]"}]}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"StopSimulation", "[", "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", "}"}], ",", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], ",", 
+          RowBox[{
+           RowBox[{"FinishSimulation", "[", "\"\<Aborted\>\"", "]"}], ";"}]}],
+          "]"}], ";"}]}], "]"}]}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"FinishSimulation", "[", "outcome_", "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{"Kill", " ", "Task"}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"$DemoState", "[", "\"\<TaskObject\>\"", "]"}], "=!=", 
+           "None"}], ",", 
+          RowBox[{
+           RowBox[{"RemoveScheduledTask", "[", 
+            RowBox[{"$DemoState", "[", "\"\<TaskObject\>\"", "]"}], "]"}], ";",
+            "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"$DemoState", "[", "\"\<TaskObject\>\"", "]"}], "=", 
+            "None"}], ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Log", " ", "Result"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{
+          RowBox[{"$DemoState", "[", "\"\<Log\>\"", "]"}], ",", 
+          RowBox[{"<|", 
+           RowBox[{
+            RowBox[{"\"\<Time\>\"", "->", 
+             RowBox[{"DateString", "[", "\"\<Time\>\"", "]"}]}], ",", 
+            RowBox[{"\"\<UI_Input\>\"", "->", 
+             RowBox[{"$DemoState", "[", "\"\<ModelType\>\"", "]"}]}], ",", 
+            RowBox[{"\"\<Kernel_Snapshot\>\"", "->", 
+             RowBox[{"$DemoState", "[", "\"\<Snapshot\>\"", "]"}]}], ",", 
+            RowBox[{"\"\<Result\>\"", "->", 
+             RowBox[{"Which", "[", 
+              RowBox[{
+               RowBox[{"outcome", "==", "\"\<Aborted\>\""}], ",", 
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<ABORTED (Safe)\>\"", ",", "Bold", ",", "Red", ",", 
+                 RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+               RowBox[{
+                RowBox[{"$DemoState", "[", "\"\<ModelType\>\"", "]"}], "=!=", 
+                
+                RowBox[{"$DemoState", "[", "\"\<Snapshot\>\"", "]"}]}], ",", 
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<SUCCESS (Drift Blocked)\>\"", ",", "Bold", ",", 
+                 RowBox[{"Darker", "[", "Green", "]"}], ",", 
+                 RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", "True",
+                ",", 
+               RowBox[{"Style", "[", 
+                RowBox[{"\"\<Normal Completion\>\"", ",", 
+                 RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}]}], "]"}]}]}],
+            "|>"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Reset", " ", "UI"}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], "=", 
+         "False"}], ";", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"$DemoState", "[", "\"\<Status\>\"", "]"}], "=", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"outcome", "==", "\"\<Aborted\>\""}], 
+           ",", "\"\<Stopped by User\>\"", ",", "\"\<Ready\>\""}], "]"}]}], 
+        ";"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"5.", " ", "THE", " ", "UI"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"LaunchArtifact", "[", "]"}], ":=", 
+     RowBox[{"DynamicModule", "[", 
+      RowBox[{
+       RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{"Safety", " ", "Check", " ", "on", " ", "Launch"}], "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], ",", 
+          RowBox[{"StopSimulation", "[", "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Deploy", "@", 
+         RowBox[{"Panel", "[", 
+          RowBox[{
+           RowBox[{"Column", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               
+               RowBox[{"\"\<ChemAIFlow: Core Algorithm Artifact\>\"", ",", 
+                "18", ",", "Bold", ",", 
+                RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                RowBox[{"FontColor", "->", 
+                 RowBox[{"RGBColor", "[", 
+                  RowBox[{"0", ",", "0", ",", "0.4"}], "]"}]}]}], "]"}], ",", 
+              
+              RowBox[{"Style", "[", 
+               
+               RowBox[{"\"\<Snapshot Safety & Drift Prevention Test\>\"", ",",
+                 "12", ",", "Italic", ",", 
+                RowBox[{"FontFamily", "->", "Q1Font"}], ",", "Gray"}], "]"}], 
+              ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+              RowBox[{"(*", "INSTRUCTIONS", "*)"}], 
+              RowBox[{"Pane", "[", 
+               RowBox[{
+                RowBox[{"Column", "[", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"TextCell", "[", 
+                    
+                    RowBox[{"\"\<Reviewer Scenario Check:\>\"", 
+                    ",", "\"\<Text\>\"", ",", 
+                    RowBox[{"FontWeight", "->", "Bold"}], ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+                   RowBox[{"TextCell", "[", 
+                    
+                    RowBox[{"\"\<1. Select 'RandomForest' -> Click START.\>\"",
+                     ",", "\"\<Text\>\"", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontSize", "->", "11"}]}], "]"}], ",", 
+                   RowBox[{"TextCell", "[", 
+                    
+                    RowBox[{"\"\<2. DRIFT TEST: Change Dropdown to \
+'GradientBoostedTrees' or 'NeuralNetwork' or 'SupportVectorMachine' while the \
+bar is moving.\>\"", ",", "\"\<Text\>\"", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontSize", "->", "11"}], ",", 
+                    RowBox[{"FontColor", "->", 
+                    RowBox[{"Darker", "[", "Green", "]"}]}]}], "]"}], ",", 
+                   RowBox[{"TextCell", "[", 
+                    
+                    RowBox[{"\"\<3. STOP TEST: Click STOP to test abortion.\>\
+\"", ",", "\"\<Text\>\"", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontSize", "->", "11"}], ",", 
+                    RowBox[{"FontColor", "->", "Red"}]}], "]"}]}], "}"}], 
+                 "]"}], ",", 
+                RowBox[{"ImageSize", "->", 
+                 RowBox[{"{", 
+                  RowBox[{"500", ",", "Automatic"}], "}"}]}]}], "]"}], ",", 
+              RowBox[{"Spacer", "[", "10", "]"}], ",", "\[IndentingNewLine]", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", "CONTROLS", "*)"}], 
+              RowBox[{"Grid", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\<Select Model:\>\"", ",", "Bold", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontSize", "->", "12"}]}], "]"}], ",", 
+                    RowBox[{"PopupMenu", "[", 
+                    RowBox[{
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"$DemoState", "[", "\"\<ModelType\>\"", "]"}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    
+                    RowBox[{"\"\<RandomForest\>\"", 
+                    ",", "\"\<GradientBoostedTrees\>\"", 
+                    ",", "\"\<NeuralNetwork\>\"", 
+                    ",", "\"\<SupportVectorMachine\>\""}], "}"}], ",", 
+                    RowBox[{"ImageSize", "->", 
+                    RowBox[{"{", 
+                    RowBox[{"220", ",", "30"}], "}"}]}], ",", 
+                    RowBox[{"BaseStyle", "->", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontSize", "->", "12"}]}], "}"}]}], ",", 
+                    RowBox[{"Enabled", "->", "True"}]}], " ", 
+                    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Always", " ", "Enabled", " ", "for", " ", "Drift", " ", 
+                    "Test"}], "*)"}], "]"}]}], "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{
+                    RowBox[{"$DemoState", "[", "\"\<Status\>\"", "]"}], ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontWeight", "->", "Bold"}], ",", 
+                    RowBox[{"FontColor", "->", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"StringContainsQ", "[", 
+                    RowBox[{
+                    RowBox[{"$DemoState", "[", "\"\<Status\>\"", "]"}], 
+                    ",", "\"\<Training\>\""}], "]"}], ",", 
+                    RowBox[{"Darker", "[", "Green", "]"}], ",", "Gray"}], 
+                    "]"}]}]}], "]"}], "]"}], ",", "SpanFromLeft"}], "}"}]}], 
+                 "}"}], ",", 
+                RowBox[{"Alignment", "->", "Left"}], ",", 
+                RowBox[{"Spacings", "->", 
+                 RowBox[{"{", 
+                  RowBox[{"1", ",", "1"}], "}"}]}]}], "]"}], ",", 
+              RowBox[{"Spacer", "[", "10", "]"}], ",", "\[IndentingNewLine]", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", "BUTTONS", "*)"}], 
+              RowBox[{"Row", "[", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"Button", "[", 
+                  RowBox[{
+                   RowBox[{"Style", "[", 
+                    
+                    RowBox[{"\"\<START TRAINING\>\"", ",", "Bold", ",", 
+                    "White", ",", "12", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+                   RowBox[{"StartSimulation", "[", "]"}], ",", 
+                   RowBox[{"ImageSize", "->", 
+                    RowBox[{"{", 
+                    RowBox[{"180", ",", "40"}], "}"}]}], ",", 
+                   RowBox[{"Background", "->", 
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], 
+                    ",", "LightGray", ",", 
+                    RowBox[{"Darker", "[", "Blue", "]"}]}], "]"}], "]"}]}], ",", 
+                   RowBox[{"Enabled", "->", 
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"!", 
+                    RowBox[{
+                    "$DemoState", "[", "\"\<IsProcessing\>\"", "]"}]}], 
+                    "]"}]}], ",", 
+                   RowBox[{"Method", "->", "\"\<Queued\>\""}]}], "]"}], ",", 
+                 RowBox[{"Spacer", "[", "20", "]"}], ",", 
+                 RowBox[{"Button", "[", 
+                  RowBox[{
+                   RowBox[{"Style", "[", 
+                    
+                    RowBox[{"\"\<STOP / ABORT\>\"", ",", "Bold", ",", "White",
+                     ",", "12", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+                   RowBox[{"StopSimulation", "[", "]"}], ",", 
+                   RowBox[{"ImageSize", "->", 
+                    RowBox[{"{", 
+                    RowBox[{"150", ",", "40"}], "}"}]}], ",", 
+                   RowBox[{"Background", "->", 
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], 
+                    ",", 
+                    RowBox[{"Darker", "[", "Red", "]"}], ",", "LightGray"}], 
+                    "]"}], "]"}]}], ",", 
+                   RowBox[{"Enabled", "->", 
+                    RowBox[{"Dynamic", "[", 
+                    RowBox[{"$DemoState", "[", "\"\<IsProcessing\>\"", "]"}], 
+                    "]"}]}], ",", 
+                   RowBox[{"Method", "->", "\"\<Preemptive\>\""}]}], "]"}]}], 
+                "}"}], "]"}], ",", 
+              RowBox[{"Spacer", "[", "10", "]"}], ",", 
+              RowBox[{"ProgressIndicator", "[", 
+               RowBox[{
+                RowBox[{"Dynamic", "[", 
+                 RowBox[{"$DemoState", "[", "\"\<Progress\>\"", "]"}], "]"}], 
+                ",", 
+                RowBox[{"{", 
+                 RowBox[{"0", ",", "100"}], "}"}], ",", 
+                RowBox[{"ImageSize", "->", 
+                 RowBox[{"{", 
+                  RowBox[{"340", ",", "15"}], "}"}]}]}], "]"}], ",", 
+              RowBox[{"Button", "[", 
+               RowBox[{"\"\<Clear Log\>\"", ",", 
+                RowBox[{
+                 RowBox[{"$DemoState", "[", "\"\<Log\>\"", "]"}], "=", 
+                 RowBox[{"{", "}"}]}], ",", 
+                RowBox[{"ImageSize", "->", 
+                 RowBox[{"{", 
+                  RowBox[{"100", ",", "20"}], "}"}]}], ",", 
+                RowBox[{"BaseStyle", "->", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"FontSize", "->", "10"}], ",", 
+                   RowBox[{"FontFamily", "->", "Q1Font"}]}], "}"}]}]}], "]"}],
+               ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+              RowBox[{"(*", "LOG", "*)"}], 
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<Execution Audit Log:\>\"", ",", "Bold", ",", 
+                RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+              RowBox[{"Pane", "[", 
+               RowBox[{
+                RowBox[{"Dynamic", "[", 
+                 RowBox[{"Grid", "[", 
+                  RowBox[{
+                   RowBox[{"Prepend", "[", 
+                    RowBox[{
+                    RowBox[{"Values", "/@", 
+                    RowBox[{"$DemoState", "[", "\"\<Log\>\"", "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\<Timestamp\>\"", ",", "Bold", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\<User Input (UI)\>\"", ",", "Bold", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\<Kernel Snapshot\>\"", ",", "Bold", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}], ",", 
+                    RowBox[{"Style", "[", 
+                    RowBox[{"\"\<Outcome\>\"", ",", "Bold", ",", 
+                    RowBox[{"FontFamily", "->", "Q1Font"}]}], "]"}]}], 
+                    "}"}]}], "]"}], ",", 
+                   RowBox[{"Frame", "->", "All"}], ",", 
+                   RowBox[{"BaseStyle", "->", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"FontFamily", "->", "Q1Font"}], ",", 
+                    RowBox[{"FontSize", "->", "12"}]}], "}"}]}], ",", 
+                   RowBox[{"Background", "->", 
+                    RowBox[{"{", 
+                    RowBox[{"None", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"LightGray", ",", "None"}], "}"}]}], "}"}]}], ",", 
+                   RowBox[{"Alignment", "->", 
+                    RowBox[{"{", 
+                    RowBox[{"Left", ",", "Center"}], "}"}]}], ",", 
+                   RowBox[{"Spacings", "->", 
+                    RowBox[{"{", 
+                    RowBox[{"1", ",", "1"}], "}"}]}], ",", 
+                   RowBox[{"ItemSize", "->", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"8", ",", "12", ",", "12", ",", "12"}], "}"}], ",",
+                     "Automatic"}], "}"}]}]}], "]"}], "]"}], ",", 
+                RowBox[{"ImageSize", "->", 
+                 RowBox[{"{", 
+                  RowBox[{"540", ",", "250"}], "}"}]}], ",", 
+                RowBox[{"Scrollbars", "->", 
+                 RowBox[{"{", 
+                  RowBox[{"False", ",", "False"}], "}"}]}], ",", 
+                RowBox[{"AppearanceElements", "->", "None"}]}], "]"}]}], 
+             "}"}], "]"}], ",", 
+           RowBox[{"ImageSize", "->", 
+            RowBox[{"{", 
+             RowBox[{"580", ",", "600"}], "}"}]}], ",", 
+           RowBox[{"Alignment", "->", "Center"}], ",", 
+           RowBox[{"Background", "->", "White"}]}], "]"}]}]}]}], "]"}]}], 
+    ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"End", "[", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"EndPackage", "[", "]"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"LAUNCH", " ", "V8"}], "*)"}], "\n", 
+   RowBox[{"PaperA1Demo`LaunchArtifact", "[", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.975926339978692*^9, 3.97592633998076*^9}, {
+   3.975926620381287*^9, 3.97592662790055*^9}, {3.975926775691908*^9, 
+   3.97592680538561*^9}, {3.975926852638979*^9, 3.9759268580383997`*^9}, {
+   3.975926961928871*^9, 3.975926962635548*^9}, {3.975926996213358*^9, 
+   3.9759270312956543`*^9}, {3.975927071199086*^9, 3.975927146227516*^9}, {
+   3.975927334172452*^9, 3.975927413721431*^9}, 3.975927490231743*^9, {
+   3.975927629634701*^9, 3.975927632392091*^9}, {3.97592766402971*^9, 
+   3.975927689345729*^9}, {3.975927751126131*^9, 3.9759277613024693`*^9}, {
+   3.9763643397258167`*^9, 3.976364340258938*^9}, 
+   3.976364737656341*^9},ExpressionUUID->"308a873e-b574-493b-b3f8-\
+c3f6a9623231"]
+},
+WindowSize->{968, 831},
+WindowMargins->{{82, Automatic}, {Automatic, 1}},
+FrontEndVersion->"14.3 for Mac OS X ARM (64-bit) (July 8, 2025)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"9e0b22bc-a7a6-4a5e-9c4e-1f78966ab910"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[400, 13, 23834, 521, 1844, "Input",ExpressionUUID->"308a873e-b574-493b-b3f8-c3f6a9623231"]
+}
+]
+*)
+
